@@ -1,0 +1,53 @@
+`timescale 1ns / 1ps
+
+module sequence_detector_tb;
+
+
+ // Inputs
+ reg sequence_in;
+ reg clock;
+ reg reset;
+
+ // Outputs
+ wire detector_out;
+
+ // Instantiate the Sequence Detector using Moore FSM
+ sequence_detector uut (
+  .sequence_in(sequence_in), 
+  .clock(clock), 
+  .reset(reset), 
+  .detector_out(detector_out)
+ );
+ initial begin
+ $monitor ($time , " sequence_in =%b,detector_out =%b"
+                                       ,sequence_in,detector_out);
+ 
+ clock = 1;
+ end 
+ always
+  #5 clock = ~clock;
+ 
+ initial begin
+  // Initialize Inputs
+  sequence_in = 0;
+  reset = 1;
+  #30;
+      reset = 0;
+  #40;
+  sequence_in = 1;
+  #10;
+  sequence_in = 0;
+  #10;
+  sequence_in = 1; 
+  #20;
+  sequence_in = 1; 
+ #10;
+  sequence_in = 0;
+  #10;
+   sequence_in =1;
+  #5 $finish;
+   
+ end
+ 
+      
+endmodule
